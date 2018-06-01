@@ -37,8 +37,8 @@
   </div><!-- ./col -->
   <div class="col-lg-3 col-xs-6">
     <div class="btn-group-vertical btn-group-lg">
-      <a href="{{ route('balance.deposit') }}" class="btn btn-primary btn-lg"><i class="fa fa-plus-circle"></i> Depositar</a>
-      <a href="{{ route('balance.withdraw') }}" class="btn btn-danger btn-lg"><i class="fa fa-minus-circle"></i> Sacar</a>
+      <a href="{{ route('admin.deposit') }}" class="btn btn-primary btn-lg"><i class="fa fa-plus-circle"></i> Depositar</a>
+      <a href="{{ route('admin.withdraw') }}" class="btn btn-danger btn-lg"><i class="fa fa-minus-circle"></i> Sacar</a>
     </div>
   </div><!-- ./col -->
 </div>

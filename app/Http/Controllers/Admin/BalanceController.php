@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Balance;
 
 class BalanceController extends Controller
 {
@@ -20,5 +21,11 @@ class BalanceController extends Controller
 
     public function deposit(){
       return view('admin.balance.deposit');
+    }
+
+    public function depositStore(Request $request){
+      $oBalance = auth()->user()->balance()->firstOrCreate([]);
+      $oBalance->deposit($request->value);
+      
     }
 }
