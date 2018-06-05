@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Balance;
+use App\User;
+
+use App\Http\Requests\MoneyValidationFormRequest;
 
 class BalanceController extends Controller
 {
@@ -12,10 +15,9 @@ class BalanceController extends Controller
       // dd(auth()->user()); // dd é o debug do Laravel
       $balance = auth()->user()->balance;
       $amount = $balance ? $balance->amount : 0;
-      $decimal = $amount - floor($amount);
-      $decimal = substr($decimal, (strpos($decimal, ".") + 1));
-      $decimal = str_pad($decimal, 2,'0' ,STR_PAD_LEFT);
-
+      $amount = number_format($amount,2,",",'.'); // pega o valor exato (sem decimais)
+      list($amount,$decimal) = explode(',',$amount);
+      
       return view('admin.balance.index', compact('amount', 'decimal'));
     }
 
@@ -23,9 +25,77 @@ class BalanceController extends Controller
       return view('admin.balance.deposit');
     }
 
-    public function depositStore(Request $request){
+    public function depositStore(MoneyValidationFormRequest $request){
       $oBalance = auth()->user()->balance()->firstOrCreate([]);
-      $oBalance->deposit($request->value);
+      $return = $oBalance->deposit($request->value);
+      if($return['success']){
+        return redirect()
+                ->route('admin.balance')
+                ->with('success', $return['message']);
+      }
+      return redirect()
+              ->back()
+              ->with('error', $return['message']);
+    }
+
+    public function withdraw(){
+      return view('admin.balance.withdraw');
+    }
+
+    public function withdrawStore(MoneyValidationFormRequest $request){
+      $oBalance = auth()->user()->balance()->firstOrCreate([]);
+      $return = $oBalance->withdraw($request->value);
+      if($return['success']){
+        return redirect()
+                ->route('admin.balance')
+                ->with('success', $return['message']);
+      }
+      return redirect()
+              ->back()
+              ->with('error', $return['message']);
+    }
+
+    public function transfer(){
+      return view('admin.balance.transfer');
+    }
+    
+    public function confirmTransfer(Request $request, User $oUser){
+      $oSender = $oUser->getSender($request->sender);
+
+      if(!$oSender)
+        return redirect()
+                ->back()
+                ->with('error', "Usuário informado não foi encontrado");
+
+      if($oSender->id === auth()->user()->id)
+        return redirect()
+                ->back()
+                ->with('error', "Usuário informado é inválido! Não pode transferir para si!");
       
+      $balance = auth()->user()->balance()->first()->amount;
+      $balance = number_format($balance,2,",",'.'); // pega o valor exato (sem decimais)
+      
+      return view('admin.balance.transfer-confirm', compact('oSender','balance'));
+    }
+
+    public function transferStore(MoneyValidationFormRequest $request, User $oUser){
+      $oSender = $oUser->find($request->sender_id);
+      if(!$oSender){
+        return redirect()
+                ->route('admin.transfer')
+                ->with('error', "Destinatário/Favorecido não encontrado");
+      }
+      
+      $oBalance = auth()->user()->balance()->firstOrCreate([]);
+      $return = $oBalance->transfer($request->value, $oSender);
+      if($return['success']){
+        return redirect()
+                ->route('admin.balance')
+                ->with('success', $return['message']);
+      }
+      return redirect()
+              ->route('admin.transfer')
+              ->with('error', $return['message']);
+      dd($return);
     }
 }
