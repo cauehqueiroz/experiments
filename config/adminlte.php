@@ -125,22 +125,22 @@ return [
             ],
             [
               'text' => 'Historico',
-              'url' => 'admin/history',
+              'url' => 'admin/historic',
               'icon' => 'history'
             ]
           ]
         ],
-        'Opções da Conta',
-        [
-            'text' => 'Profile',
-            'url'  => 'admin/settings',
-            'icon' => 'user',
-        ],
-        [
-            'text' => 'Change Password',
-            'url'  => 'admin/settings',
-            'icon' => 'lock',
-        ]
+        // 'Opções da Conta',
+        // [
+        //     'text' => 'Profile',
+        //     'url'  => 'admin/settings',
+        //     'icon' => 'user',
+        // ],
+        // [
+        //     'text' => 'Change Password',
+        //     'url'  => 'admin/settings',
+        //     'icon' => 'lock',
+        // ]
     ],
 
     /*

@@ -107,7 +107,7 @@ class Balance extends Model
             $oBalanceSender->save();
 
             $oSender->historics()->create([
-                'type' => 'T',
+                'type' => 'I',
                 'amount' => $value,
                 'total_before' => $totalBeforeSender,
                 'total_after' => $oBalanceSender->amount,

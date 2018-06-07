@@ -33,7 +33,7 @@
             <div class="icon">
                 <i class="ion ion-cash"></i>
             </div>
-            <a href="#" class="small-box-footer">
+            <a href="{{ route('admin.historic') }}" class="small-box-footer">
                 Histórico <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>

@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Balance;
+use App\Models\Historic;
 use App\User;
 
 use App\Http\Requests\MoneyValidationFormRequest;
 
 class BalanceController extends Controller
 {
+  private $totalPage = 5;
     public function index() {
       // dd(auth()->user()); // dd é o debug do Laravel
       $balance = auth()->user()->balance;
@@ -97,5 +99,14 @@ class BalanceController extends Controller
               ->route('admin.transfer')
               ->with('error', $return['message']);
       dd($return);
+    }
+
+    public function historic(Historic $historic){
+
+      $historics = auth()->user()->historics()->with(['userSender'])->paginate($this->totalPage);
+
+      $types = $historic->type();
+      // dd($historics);
+      return view('admin.balance.historics', compact('historics', 'types'));
     }
 }
