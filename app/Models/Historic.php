@@ -50,11 +50,32 @@ class Historic extends Model
 
         if($this->user_id_transaction != null && $type === 'I')
             return '<i class="fa fa-exchange"></i>';
-            
+
         return $types[$type];
     }
 
     public function getDateAttribute($date){
         return \Carbon\Carbon::parse($date)->format('d/m/Y');
     }
+
+    public function scopeUserAuth($query){
+        return $query->where('user_id', auth()->user()->id);
+    }
+
+    public function search(Array $data){
+        return $this->where(function($query) use ($data){
+            if(isset($data['id'])){
+                $query->where('id','=',$data['id']);
+            }
+            if(isset($data['date'])){
+                $query->where('date','=',$data['date']);
+            }
+            if(isset($data['type'])){
+                $query->where('type','=',$data['type']);
+            }
+        })
+        ->userAuth()
+        ;
+    }
+
 }

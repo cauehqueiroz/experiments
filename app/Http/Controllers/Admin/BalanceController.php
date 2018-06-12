@@ -101,12 +101,19 @@ class BalanceController extends Controller
       dd($return);
     }
 
-    public function historic(Historic $historic){
-
-      $historics = auth()->user()->historics()->with(['userSender'])->paginate($this->totalPage);
+    public function historic(Historic $historic, Request $request){
+      $data = $request->all();
+      if($request->_token){
+        $historics = $historic->search($data)->paginate($this->totalPage);
+      }else{
+        $historics = auth()->user()->historics()->with(['userSender'])->paginate($this->totalPage);
+      }
 
       $types = $historic->type();
       // dd($historics);
-      return view('admin.balance.historics', compact('historics', 'types'));
+      return view('admin.balance.historics', compact('historics', 'types', 'data'));
     }
+
+    
+
 }

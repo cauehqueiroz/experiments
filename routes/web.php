@@ -12,6 +12,7 @@
 */
 Route::group(['middleware' => ['auth'], 'namespace' => 'Admin', 'prefix' => 'admin'], function(){
 
+  Route::post('historic', 'BalanceController@historic')->name('historic.search');
   Route::get('historic', 'BalanceController@historic')->name('admin.historic');
 
   Route::get('transfer', 'BalanceController@transfer')->name('admin.transfer');
@@ -29,6 +30,8 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Admin', 'prefix' => 'adm
   Route::get('/', 'AdminController@index')->name('admin.home');
 });
 
+Route::post('/profile', 'Admin\UserController@profileUpdate')->name('profile.update')->middleware('auth');
+Route::get('/profile', 'Admin\UserController@profile')->name('profile')->middleware('auth');
 Route::get('/', 'Site\SiteController@index')->name('home');
 
 Auth::routes();

@@ -20,7 +20,7 @@
           <h3 class="box-title">Filtrar Extrato</h3>
       </div><!-- /.box-header -->
       <!-- form start -->
-          <form role="form" method="get" action="{{ route('admin.historic') }}">
+          <form role="form" method="post" action="{{ route('historic.search') }}">
         {!! csrf_field() !!}
           <div class="box-body">
               
@@ -29,7 +29,7 @@
                     <div class="col col-md-3">
                         <div class="form-group">
                             <label>Código</label>
-                            <input type="text" class="form-control" id="id" name="id" placeholder="Número da operação">
+                            <input type="text" class="form-control" id="id" name="id" value="{{ isset($data['id'])?$data['id']:'' }}" placeholder="Número da operação">
                         </div>
                     </div>
                     <div class="col col-md-3">
@@ -38,7 +38,7 @@
                             <select class="form-control" name="type">
                                     <option value="">- Todos -</option>
                                 @foreach($types as $type => $value)
-                                    <option value="{{ $type }}">{{ $value }}</option>
+                                    <option value="{{ $type }}" {{ isset($data['type']) && $data['type'] == $type ?'selected':'' }}>{{ $value }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -46,7 +46,7 @@
                     <div class="col col-md-3">
                         <div class="form-group">
                             <label>Data</label>
-                            <input type="date" class="form-control" id="date" name="date" placeholder="dia/mes/ano">
+                            <input type="date" class="form-control" id="date" name="date" value="{{ isset($data['date'])?$data['date']:'' }}" placeholder="dia/mes/ano">
                         </div>
                     </div>
                     <div class="col col-md-3">
@@ -102,7 +102,7 @@
           </div><!-- /.box-body -->
 
           <div class="box-footer">
-              {!! $historics->links() !!}
+              {!! $historics->appends($data)->links() !!}
           </div>
     </div>
 @stop
